@@ -3,8 +3,8 @@
     <div class="site-content__wrapper">
       <div class="site-content">
         <div class="brand-info">
-          <h2 class="brand-info__text">renren-fast-vue</h2>
-          <p class="brand-info__intro">renren-fast-vue基于vue、element-ui构建开发，实现renren-fast后台管理前端功能，提供一套更优的前端解决方案。</p>
+          <h2 class="brand-info__text">电商网站后台管理系统</h2>
+          <p class="brand-info__intro">电商网站后台管理系统主要针对于商品、用户、权限划分等进行管理的企业业务级管理系统</p>
         </div>
         <div class="login-main">
           <h3 class="login-title">管理员登录</h3>

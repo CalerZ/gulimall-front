@@ -13,8 +13,17 @@
     <el-form-item label="层级" prop="catLevel">
       <el-input v-model="dataForm.catLevel" placeholder="层级"></el-input>
     </el-form-item>
-    <el-form-item label="是否显示[0-不显示，1显示]" prop="showStatus">
-      <el-input v-model="dataForm.showStatus" placeholder="是否显示[0-不显示，1显示]"></el-input>
+    <el-form-item label="是否显示">
+     <template slot-scope="scope">
+       <el-switch
+  v-model="scope.row.showStatus"
+  active-color="#13ce66"
+  inactive-color="#ff4949">
+</el-switch>
+     </template>
+
+
+
     </el-form-item>
     <el-form-item label="排序" prop="sort">
       <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
