@@ -26,7 +26,7 @@
         prop="id"
         header-align="center"
         align="center"
-        label="">
+        label="id">
       </el-table-column>
       <el-table-column
         prop="name"
@@ -107,16 +107,38 @@
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl('/sys/module/list'),
-          method: 'get',
-          params: this.$http.adornParams({
-            'page': this.pageIndex,
-            'limit': this.pageSize,
-            'key': this.dataForm.key
+          method: 'post',
+          data: this.$http.adornData({
+            'currPage': this.pageIndex,
+            'pageSize': this.pageSize,
+           
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            this.dataList = data.page.list
-            this.totalPage = data.page.totalCount
+            this.dataList = data.data.list
+            this.totalPage = data.data.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
+      //删除刷新
+        getDeleteDataList () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl('/sys/module/list'),
+          method: 'post',
+          data: this.$http.adornData({
+            'currPage': 1,
+            'pageSize': this.pageSize,
+           
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.dataList = data.data.list
+            this.totalPage = data.data.totalCount
           } else {
             this.dataList = []
             this.totalPage = 0
@@ -167,7 +189,9 @@
                 type: 'success',
                 duration: 1500,
                 onClose: () => {
-                  this.getDataList()
+                  if(data.data.list.length==0){this.this.getDeleteDataList()}else{
+                    this.getDataList()
+                  }
                 }
               })
             } else {

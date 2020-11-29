@@ -28,6 +28,11 @@
           >批量删除</el-button
         >
       </el-form-item>
+      <el-form-item>
+        <div style="width:70px;height:35px">
+          <icon-svg name="search" style="height:100%;width:100%"></icon-svg>
+        </div>
+      </el-form-item>
     </el-form>
     <el-table
       :data="dataList"
@@ -40,7 +45,8 @@
         type="selection"
         header-align="center"
         align="center"
-        width="50"
+        width="60"
+        sortable
       >
       </el-table-column>
       <el-table-column
@@ -48,28 +54,75 @@
         header-align="center"
         align="center"
         label="品牌id"
+        sortable
       >
+        <template slot-scope="scope">
+          <el-input
+            v-if="!scope.row.brandId"
+            v-model="scope.row.brandId"
+            placeholder="请输入内容"
+          ></el-input>
+           <template v-if="scope.row.brandId">
+          {{scope.row.brandId}}
+        </template>
+        </template>
+       
       </el-table-column>
       <el-table-column
         prop="name"
         header-align="center"
         align="center"
         label="品牌名"
+        sortable
       >
+       <template slot-scope="scope">
+          <el-input
+            v-if="!scope.row.name"
+            v-model="scope.row.name"
+            placeholder="请输入内容"
+          ></el-input>
+           <template v-if="scope.row.name">
+          {{scope.row.name}}
+        </template>
+        </template>
       </el-table-column>
+     
+       
       <el-table-column
         prop="logo"
         header-align="center"
         align="center"
         label="品牌logo地址"
+        sortable
       >
+       <template slot-scope="scope">
+          <el-input
+            v-if="!scope.row.logo"
+            v-model="scope.row.logo"
+            placeholder="请输入内容"
+          ></el-input>
+           <template v-if="scope.row.logo">
+          {{scope.row.logo}}
+        </template>
+        </template>
       </el-table-column>
       <el-table-column
         prop="descript"
         header-align="center"
         align="center"
         label="介绍"
+        sortable
       >
+      <template slot-scope="scope">
+          <el-input
+            v-if="!scope.row.descript"
+            v-model="scope.row.descript"
+            placeholder="请输入内容"
+          ></el-input>
+           <template v-if="scope.row.descript">
+          {{scope.row.descript}}
+        </template>
+        </template>
       </el-table-column>
       <el-table-column header-align="center" align="center" label="显示状态">
         <template slot-scope="scope">
@@ -77,7 +130,8 @@
             v-model="scope.row.showStatus"
             active-color="#13ce66"
             inactive-color="#ff4949"
-           @change="updateShowStatus(scope.row)" >
+            @change="updateShowStatus(scope.row)"
+          >
           </el-switch>
         </template>
       </el-table-column>
@@ -86,14 +140,36 @@
         header-align="center"
         align="center"
         label="检索首字母"
-     >
+        sortable
+      >
+       <template slot-scope="scope">
+          <el-input
+            v-if="!scope.row.firstLetter"
+            v-model="scope.row.firstLetter"
+            placeholder="请输入内容"
+          ></el-input>
+           <template v-if="scope.row.firstLetter">
+          {{scope.row.firstLetter}}
+        </template>
+        </template>
       </el-table-column>
       <el-table-column
         prop="sort"
         header-align="center"
         align="center"
         label="排序"
+        sortable
       >
+       <template slot-scope="scope">
+          <el-input
+            v-if="scope.row.sort=='sort'?true:false"
+            v-model="scope.row.sort"
+            placeholder="请输入内容"
+          ></el-input>
+           <template v-if="scope.row.sort!='sort'?true:false">
+          {{scope.row.sort}}
+        </template>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -104,12 +180,14 @@
       >
         <template slot-scope="scope">
           <el-button
+           v-if="scope.row.brandId"
             type="text"
             size="small"
             @click="addOrUpdateHandle(scope.row.brandId)"
             >修改</el-button
           >
           <el-button
+           v-if="scope.row.brandId"
             type="text"
             size="small"
             @click="deleteHandle(scope.row.brandId)"
@@ -142,9 +220,11 @@ import AddOrUpdate from "./brand-add-or-update";
 export default {
   data() {
     return {
+      input: "",
       dataForm: {
         key: ""
       },
+      iconList: [],
       dataList: [],
       pageIndex: 1,
       pageSize: 10,
@@ -157,6 +237,7 @@ export default {
   components: {
     AddOrUpdate
   },
+
   activated() {
     this.getDataList();
   },
@@ -172,9 +253,8 @@ export default {
           pageSize: this.pageSize,
           params: { key: this.dataForm.key }
         })
-      }).then(({ data }) => {
-        console.log(data);
-        if (data.code == 0) {
+      }).then(data => {
+        if (data) {
           for (let i = 0; i < data.data.list.length; i++) {
             if (data.data.list[i].showStatus == 1) {
               data.data.list[i].showStatus = true;
@@ -184,6 +264,18 @@ export default {
           }
           this.dataList = data.data.list;
           this.totalPage = data.data.totalCount;
+          this.dataList.unshift(
+            {
+              brandId: "",
+              descript: "",
+              firstLetter: "",
+              isDelete: "",
+              logo: "",
+              name: "",
+              showStatus: "",
+              sort:'sort'
+            }
+          );
         } else {
           this.dataList = [];
           this.totalPage = 0;
@@ -213,26 +305,23 @@ export default {
         this.$refs.addOrUpdate.init(id);
       });
     },
-    updateShowStatus(datas){
-      console.log(datas)
+    updateShowStatus(datas) {
       //获取id和状态
       //发送请求
 
-       this.$http({
+      this.$http({
         url: this.$http.adornUrl("/product/brand/update/status"),
         method: "get",
-        params: this.$http.adornParams({brandId:datas.brandId,status:datas.showStatus==false?0:1}, false)
+        params: this.$http.adornParams(
+          { brandId: datas.brandId, status: datas.showStatus == false ? 0 : 1 },
+          false
+        )
       }).then(({ data }) => {
         this.$message({
           type: "success",
           message: "状态修改成功!"
         });
-       
       });
-
-    
-
-
     },
     // 删除
     deleteHandle(id) {
@@ -255,18 +344,14 @@ export default {
           method: "post",
           data: this.$http.adornData(ids, false)
         }).then(({ data }) => {
-          if (data && data.code === 0) {
-            this.$message({
-              message: "操作成功",
-              type: "success",
-              duration: 1500,
-              onClose: () => {
-                this.getDataList();
-              }
-            });
-          } else {
-            this.$message.error(data.msg);
-          }
+          this.$message({
+            message: "操作成功",
+            type: "success",
+            duration: 1500,
+            onClose: () => {
+              this.getDataList();
+            }
+          });
         });
       });
     }

@@ -4,6 +4,9 @@ import router from "@/router";
 import qs from "qs";
 import merge from "lodash/merge";
 import { clearLoginInfo } from "@/utils";
+import elementUI from "element-ui";
+
+const paths = [/\/api\/product/, /ware/];
 
 const http = axios.create({
   timeout: 1000 * 30,
@@ -31,10 +34,34 @@ http.interceptors.request.use(
  */
 http.interceptors.response.use(
   response => {
+    console.log("11", response);
+
     if (response.data && response.data.code === 401) {
       // 401, token失效
       clearLoginInfo();
       router.push({ name: "login" });
+    }
+
+    if (response.config && paths[0].test(response.config.url)) {
+      if (response.data && response.data.code == 0) {
+      
+        return response.data;
+        
+      } else {
+       console.log('error')
+       console.log(response)
+        elementUI.Message.error({
+          message: `${response.data.code}:${response.data.msg}`,
+         
+          duration: 2000
+        });
+        elementUI.Message({
+          message: 'error',
+           type:'warning',
+          duration: 2000
+        });
+        return false;
+      }
     }
     return response;
   },

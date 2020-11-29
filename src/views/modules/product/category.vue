@@ -139,7 +139,7 @@ export default {
       this.$http({
         url: this.$http.adornUrl("/product/category/list/tree"),
         method: "get"
-      }).then(({ data }) => {
+      }).then((data) => {
         this.menus = data.data;
       });
     },
@@ -174,7 +174,7 @@ export default {
         url: this.$http.adornUrl("/product/category/save"),
         method: "post",
         data: this.$http.adornData(this.category, false)
-      }).then(({ data }) => {
+      }).then((data) => {
         this.$message({
           type: "success",
           message: "添加成功!"
@@ -193,7 +193,7 @@ export default {
       this.$http({
         url: this.$http.adornUrl(`/product/category/info/${data.catId}`),
         method: "get"
-      }).then(({ data }) => {
+      }).then((data) => {
         console.log("jkq", data);
 
         this.category.name = data.data.name;
@@ -214,7 +214,7 @@ export default {
           { name, catId, icon, productUnit, showStatus },
           false
         )
-      }).then(({ data }) => {
+      }).then((data) => {
         //对象解构 左右相同的变量才能成功解构他，否则不能成功解构。
         this.dialogFormVisible = false;
         this.$message({
@@ -242,7 +242,7 @@ export default {
           method: "post",
           data: this.$http.adornData(ids, false)
         })
-          .then(({ data }) => {
+          .then((data) => {
             //对象解构 左右相同的变量才能成功解构他，否则不能成功解构。
 
             this.$message({
@@ -346,7 +346,7 @@ export default {
         url: this.$http.adornUrl("/product/category/update/muti"),
         method: "post",
         data: this.$http.adornData(this.updateNodes, false)
-      }).then(({ data }) => {
+      }).then((data) => {
         //对象解构 左右相同的变量才能成功解构他，否则不能成功解构。
         if (data.code == 0) {
           this.$message({
@@ -387,7 +387,7 @@ export default {
           method: "post",
           data: this.$http.adornData(catid, false)
         })
-          .then(({ data }) => {
+          .then((data) => {
             //对象解构 左右相同的变量才能成功解构他，否则不能成功解构。
 
             this.$message({

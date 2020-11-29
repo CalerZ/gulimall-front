@@ -65,10 +65,10 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.name = data.module.name
-                this.dataForm.title = data.module.title
-                this.dataForm.tag = data.module.tag
-                this.dataForm.descriptions = data.module.descriptions
+                this.dataForm.name = data.data.name
+                this.dataForm.title = data.data.title
+                this.dataForm.tag = data.data.tag
+                this.dataForm.descriptions = data.data.descriptions
               }
             })
           }

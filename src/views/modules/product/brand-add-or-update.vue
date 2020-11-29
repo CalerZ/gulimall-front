@@ -45,7 +45,7 @@
           name: '',
           logo: '',
           descript: '',
-          showStatus: '',
+          showStatus: false,
           firstLetter: '',
           sort: ''
         },
@@ -83,17 +83,17 @@
               url: this.$http.adornUrl(`/product/brand/info/${this.dataForm.brandId}`),
               method: 'get',
               params: this.$http.adornParams()
-            }).then((datas) => {
-             let data=datas.data.data
-              console.log(data)
-              if (datas.data && datas.data.code === 0) {
-                this.dataForm.id = data.brandId
-                this.dataForm.name = data.name
-                this.dataForm.logo = data.logo
-                this.dataForm.descript = data.descript
-                this.dataForm.showStatus = data.showStatus?true:false
-                this.dataForm.firstLetter = data.firstLetter
-                this.dataForm.sort = data.sort
+            }).then((data) => {
+            
+             
+              if (data && data.code === 0) {
+                this.dataForm.id = data.data.brandId
+                this.dataForm.name = data.data.name
+                this.dataForm.logo = data.data.logo
+                this.dataForm.descript = data.data.descript
+                this.dataForm.showStatus = data.data.showStatus?true:false
+                this.dataForm.firstLetter = data.data.firstLetter
+                this.dataForm.sort = data.data.sort
               }
             })
           }
@@ -117,7 +117,7 @@
           
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+             
                 this.$message({
                   message: '操作成功',
                   type: 'success',
@@ -127,9 +127,7 @@
                     this.$emit('refreshDataList')
                   }
                 })
-              } else {
-                this.$message.error(data.msg)
-              }
+             
             })
           }
         })
