@@ -7,8 +7,8 @@
     <el-form-item label="属性名" prop="attrName">
       <el-input v-model="dataForm.attrName" placeholder="属性名"></el-input>
     </el-form-item>
-    <el-form-item label="是否需要检索[0-不需要，1-需要]" prop="searchType">
-      <el-input v-model="dataForm.searchType" placeholder="是否需要检索[0-不需要，1-需要]"></el-input>
+    <el-form-item label="是否需要检索" prop="searchType">
+      <el-input v-model="dataForm.searchType" placeholder="是否需要检索"></el-input>
     </el-form-item>
     <el-form-item label="属性图标" prop="icon">
       <el-input v-model="dataForm.icon" placeholder="属性图标"></el-input>

@@ -3,18 +3,23 @@
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="150px" label-position="center">
     <el-form-item label="品牌名" prop="name">
       <el-input v-model="dataForm.name" placeholder="品牌名"></el-input>
     </el-form-item>
-    <el-form-item label="品牌logo地址" prop="logo">
+    <el-form-item label="品牌logo" prop="logo">
       <el-input v-model="dataForm.logo" placeholder="品牌logo地址"></el-input>
     </el-form-item>
     <el-form-item label="介绍" prop="descript">
       <el-input v-model="dataForm.descript" placeholder="介绍"></el-input>
     </el-form-item>
-    <el-form-item label="显示状态[0-不显示；1-显示]" prop="showStatus">
-      <el-input v-model="dataForm.showStatus" placeholder="显示状态[0-不显示；1-显示]"></el-input>
+    <el-form-item label="显示状态" prop="showStatus">
+      
+      <el-switch
+  v-model="dataForm.showStatus"
+  active-color="#13ce66"
+  inactive-color="#ff4949">
+</el-switch>
     </el-form-item>
     <el-form-item label="检索首字母" prop="firstLetter">
       <el-input v-model="dataForm.firstLetter" placeholder="检索首字母"></el-input>
@@ -40,7 +45,7 @@
           name: '',
           logo: '',
           descript: '',
-          showStatus: '',
+          showStatus: false,
           firstLetter: '',
           sort: ''
         },
@@ -68,6 +73,7 @@
     },
     methods: {
       init (id) {
+        console.log(id)
         this.dataForm.brandId = id || 0
         this.visible = true
         this.$nextTick(() => {
@@ -77,14 +83,17 @@
               url: this.$http.adornUrl(`/product/brand/info/${this.dataForm.brandId}`),
               method: 'get',
               params: this.$http.adornParams()
-            }).then(({data}) => {
+            }).then((data) => {
+            
+             
               if (data && data.code === 0) {
-                this.dataForm.name = data.brand.name
-                this.dataForm.logo = data.brand.logo
-                this.dataForm.descript = data.brand.descript
-                this.dataForm.showStatus = data.brand.showStatus
-                this.dataForm.firstLetter = data.brand.firstLetter
-                this.dataForm.sort = data.brand.sort
+                this.dataForm.id = data.data.brandId
+                this.dataForm.name = data.data.name
+                this.dataForm.logo = data.data.logo
+                this.dataForm.descript = data.data.descript
+                this.dataForm.showStatus = data.data.showStatus?true:false
+                this.dataForm.firstLetter = data.data.firstLetter
+                this.dataForm.sort = data.data.sort
               }
             })
           }
@@ -102,12 +111,13 @@
                 'name': this.dataForm.name,
                 'logo': this.dataForm.logo,
                 'descript': this.dataForm.descript,
-                'showStatus': this.dataForm.showStatus,
+                'showStatus': this.dataForm.showStatus?1:0,
                 'firstLetter': this.dataForm.firstLetter,
                 'sort': this.dataForm.sort
+          
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+             
                 this.$message({
                   message: '操作成功',
                   type: 'success',
@@ -117,9 +127,7 @@
                     this.$emit('refreshDataList')
                   }
                 })
-              } else {
-                this.$message.error(data.msg)
-              }
+             
             })
           }
         })

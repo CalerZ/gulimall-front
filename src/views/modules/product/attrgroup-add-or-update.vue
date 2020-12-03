@@ -72,11 +72,11 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.attrGroupName = data.attrGroup.attrGroupName
-                this.dataForm.sort = data.attrGroup.sort
-                this.dataForm.descript = data.attrGroup.descript
-                this.dataForm.icon = data.attrGroup.icon
-                this.dataForm.catelogId = data.attrGroup.catelogId
+                this.dataForm.attrGroupName = data.data.attrGroupName
+                this.dataForm.sort = data.data.sort
+                this.dataForm.descript = data.data.descript
+                this.dataForm.icon = data.data.icon
+                this.dataForm.catelogId = data.data.catelogId
               }
             })
           }
@@ -98,7 +98,7 @@
                 'catelogId': this.dataForm.catelogId
               })
             }).then(({data}) => {
-              if (data && data.code === 0) {
+          
                 this.$message({
                   message: '操作成功',
                   type: 'success',
@@ -108,9 +108,7 @@
                     this.$emit('refreshDataList')
                   }
                 })
-              } else {
-                this.$message.error(data.msg)
-              }
+              
             })
           }
         })
